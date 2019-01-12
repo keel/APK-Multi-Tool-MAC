@@ -1,5 +1,5 @@
 # APK-Multi-Tool-MAC
-This can be used on MAC, forked from APK-Multi-Tool-Linux, and do some changes.
+This can be used on MAC, forked from [APK-Multi-Tool-Linux](https://github.com/APK-Multi-Tool/APK-Multi-Tool-Linux), and do some changes.
 
 
 # Notice
@@ -15,7 +15,7 @@ rm $HOME/Library/apktool/*
 * fixed comptype in co ()
 
 # Thanks:
-https://github.com/APK-Multi-Tool/APK-Multi-Tool-Linux
-Goes to Daneshm90 the Original Writer of APK Manager
-Goes to Brut.all for his awesome tool.
-Goes to JF for ofcourse, smali/baksmali
+* https://github.com/APK-Multi-Tool/APK-Multi-Tool-Linux
+* Goes to Daneshm90 the Original Writer of APK Manager
+* Goes to Brut.all for his awesome tool.
+* Goes to JF for ofcourse, smali/baksmali
