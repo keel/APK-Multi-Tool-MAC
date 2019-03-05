@@ -4,6 +4,13 @@
 # Changelog for linux version:
 # v 0.1 Initial version
 current=`pwd`
+#使用pem方式签名
+keyfile=testkey
+#ktool的keystore用jarsigner签名
+keytoolKey=androidkiller.keystore
+keystorePwd=killer
+keystoreAlias=androidkiller
+keystoreAliasPwd=killer
 
 # 0) Pull APK
 ap () {
@@ -105,12 +112,15 @@ si () {
 		INFILE="../place-apk-here-for-modding/$fileName-unsigned.apk"
 		projectsFILE="../place-apk-here-for-modding/$fileName-signed.apk"
 		if [ -e "$INFILE" ] ; then
-			#echo "java -jar signapk.jar -w testkey.x509.pem testkey.pk8 $INFILE $projectsFILE"
-			java -jar signapk.jar -w testkey.x509.pem testkey.pk8 "$INFILE" "$projectsFILE"
+			#echo "java -jar signapk.jar -w "$keyfile".x509.pem "$keyfile".pk8 $INFILE $projectsFILE"
+			java -jar signapk.jar -w "$keyfile".x509.pem "$keyfile".pk8 "$INFILE" "$projectsFILE"
+			echo "==> Sign apk done(pem). with sign:"$keyfile
+			# echo 'jarsigner -keystore' "$keytoolKey" '-storepass' "$keystorePwd" "-keypass" "$keystoreAliasPwd" '-signedjar' "$projectsFILE" "$INFILE" "$keystoreAlias"
+			#jarsigner -keystore "$keytoolKey" -storepass "$keystorePwd" -keypass "$keystoreAliasPwd" -signedjar "$projectsFILE" "$INFILE" "$keystoreAlias"
+			#echo "==> Sign apk done(jarsigner). with sign:"$keytoolKey
 			if [ "x$?" = "x0" ] ; then
 				rm -f "$INFILE"
 			fi
-			echo "==> Sign apk done."
 		else
 			echo "Warning: cannot find file '$INFILE'"
 		fi
@@ -307,8 +317,8 @@ asi () {
 	cd other
 	find "../place-apk-here-for-signing" -name *.apk | while read PLACE-APK-HERE-FOR-SIGNING ;
 	do
-		java -jar signapk.jar -w testkey.x509.pem testkey.pk8 $PLACE-APK-HERE-FOR-SIGNING ${PLACE-APK-HERE-FOR-SIGNING%.*}-signed.apk
-		echo "${PLACE-APK-HERE-FOR-SIGNING%.*}-signed.apk - Done."
+		java -jar signapk.jar -w "$keyfile".x509.pem "$keyfile".pk8 $PLACE-APK-HERE-FOR-SIGNING ${PLACE-APK-HERE-FOR-SIGNING%.*}-signed.apk
+		echo "${PLACE-APK-HERE-FOR-SIGNING%.*}-signed.apk - Done. with sign:"$keyfile
 	done
 	cd ..
 }
@@ -594,11 +604,11 @@ mkzip () {
 		echo ; echo "Compressing update.zip..."
 		7za a -tzip "./projects/$zipName.zip" ./zip-temp/* -mx"$clvl" -r-
 		echo ; echo "Signing $zipName.zip..."
-		java -jar "./other/signapk.jar" -w "./other/testkey.x509.pem" "./other/testkey.pk8" "./projects/$zipName.zip" "./projects/$zipName-signed.zip"
+		java -jar "./other/signapk.jar" -w "./"other/$keyfile".x509.pem" "./"other/$keyfile".pk8" "./projects/$zipName.zip" "./projects/$zipName-signed.zip"
 		rm -f "./projects/$zipName.zip"
 		clear ; echo ; printf "Done."
 		if [[ -f "./projects/$zipName-signed.zip" ]]; then
-			printf " Created: /projects/$zipName-signed.zip\n"
+			printf " Created: /projects/$zipName-signed.zip with sign:"$keyfile"\n"
 		fi
 	fi
 }

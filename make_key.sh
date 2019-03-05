@@ -13,8 +13,8 @@ if [ -z $1 ]; then
 fi
 openssl genrsa -3 -out $1.pem 2048
 openssl req -new -x509 -key $1.pem -out $1.x509.pem -days 10000 \
-	-subj "/C=TW/ST=Taiwan/L=Taipei/O=APK Repacker/OU=APKRP/CN=email@mail.mail"
+	-subj "/C=HK/ST=HongKong/L=HongKong/O=APK Repacker/OU=APKRP/CN=keel.sike@gmail.com"
 openssl pkcs8 -in $1.pem -topk8 -outform DER -out $1.pk8 -nocrypt
 
-#echo "Please enter the password for this key:"
-#openssl pkcs8 -in $1.pem -topk8 -outform DER -out $1.pk8 -passout stdin
+# echo "Please enter the password for this key:"
+# openssl pkcs8 -in $1.pem -topk8 -outform DER -out $1.pk8 -passout stdin
