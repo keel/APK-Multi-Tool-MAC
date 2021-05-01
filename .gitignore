@@ -1,4 +1,6 @@
 web/render/*
+_ccc
+other/node_modules
 !web/render/index.js
 config/*
 !config/default.json

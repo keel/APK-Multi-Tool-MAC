@@ -7,10 +7,13 @@ current=`pwd`
 #使用pem方式签名
 keyfile=testkey
 #ktool的keystore用jarsigner签名
-keytoolKey=androidkiller.keystore
-keystorePwd=killer
-keystoreAlias=androidkiller
-keystoreAliasPwd=killer
+keytoolKey=tiandounew.jks
+keystorePwd=XXXXXX
+keystoreAlias=td
+keystoreAliasPwd=XXXXXX
+pkgName=
+
+
 
 # 0) Pull APK
 ap () {
@@ -36,42 +39,42 @@ ap () {
 
 # 1) Extract APK
 ex () {
-	echo
-	if [[ -n $fileName ]] ; then
-		cd other
-		rm -f "../place-apk-here-for-modding/$fileName-signed.apk"
-		rm -f "../place-apk-here-for-modding/$fileName-unsigned.apk"
-		rm -rf "../projects/$fileName.apk"
-		if [ ! -d "../projects/$fileName.apk" ] ; then
-			mkdir "../projects/$fileName.apk"
-		fi
-		clear
-		# Must be -o"../projects" and not -o "../projects"
-		7za x -o"../projects/$fileName.apk" ../place-apk-here-for-modding/$fileName.apk
-		cd ..
-	else
-		actvfile ; retval=$? ; if [[ $retval == 0 ]]; then ex ; fi
-	fi
+	echo "NO action"
+	# if [[ -n $fileName ]] ; then
+	# 	cd other
+	# 	rm -f "../place-apk-here-for-modding/$fileName-signed.apk"
+	# 	rm -f "../place-apk-here-for-modding/$fileName-unsigned.apk"
+	# 	rm -rf "../projects/$fileName.apk"
+	# 	if [ ! -d "../projects/$fileName.apk" ] ; then
+	# 		mkdir "../projects/$fileName.apk"
+	# 	fi
+	# 	clear
+	# 	# Must be -o"../projects" and not -o "../projects"
+	# 	7za x -o"../projects/$fileName.apk" ../place-apk-here-for-modding/$fileName.apk
+	# 	cd ..
+	# else
+	# 	actvfile ; retval=$? ; if [[ $retval == 0 ]]; then ex ; fi
+	# fi
 }
 
 # 2) Optimize APK PNGs
 opt () {
-	echo
-	if [[ -n $fileName || -f ../projects/$fileName.apk/res ]] ; then
-		cd other
-		find "../projects/$fileName.apk/res" -name *.png | while read PNG_FILE ;
-		do
-			if [ `echo "$PNG_FILE" | grep -c "\.9\.png$"` -eq 0 ] ; then
-				optipng -o99 "$PNG_FILE"
-			fi
-		done
-		clear
-		echo
-		echo "PNGs optimized."
-		cd ..
-	else
-		echo "Error. Check active APK file and if APK is extracted."
-	fi
+	echo "NO action"
+	# if [[ -n $fileName || -f ../projects/$fileName.apk/res ]] ; then
+	# 	cd other
+	# 	find "../projects/$fileName.apk/res" -name *.png | while read PNG_FILE ;
+	# 	do
+	# 		if [ `echo "$PNG_FILE" | grep -c "\.9\.png$"` -eq 0 ] ; then
+	# 			optipng -o99 "$PNG_FILE"
+	# 		fi
+	# 	done
+	# 	clear
+	# 	echo
+	# 	echo "PNGs optimized."
+	# 	cd ..
+	# else
+	# 	echo "Error. Check active APK file and if APK is extracted."
+	# fi
 }
 
 pack () {
@@ -87,21 +90,22 @@ oa () {
 
 # 3) Zip APK
 zip () {
-	if [[ -n $fileName ]] ; then
-		echo "Enter APK type:"
-		echo "---------------"
-		PS3=$(echo ; echo "Enter selection: ")
-		select mode in "System APK" "Regular APK" ; do
-			case "$mode" in
-			"System APK"  ) pack ; break ;;
-			"Regular APK" ) oa ; break ;;
-				*) echo ; echo "Invalid input." ;;
-			esac
-		done
-		clear ; echo ; echo "File: $fileName.apk zipped."
-	else
-		actvfile ; retval=$? ; if [[ $retval == 0 ]]; then zip ; fi
-	fi
+	echo "NO action"
+	# if [[ -n $fileName ]] ; then
+	# 	echo "Enter APK type:"
+	# 	echo "---------------"
+	# 	PS3=$(echo ; echo "Enter selection: ")
+	# 	select mode in "System APK" "Regular APK" ; do
+	# 		case "$mode" in
+	# 		"System APK"  ) pack ; break ;;
+	# 		"Regular APK" ) oa ; break ;;
+	# 			*) echo ; echo "Invalid input." ;;
+	# 		esac
+	# 	done
+	# 	clear ; echo ; echo "File: $fileName.apk zipped."
+	# else
+	# 	actvfile ; retval=$? ; if [[ $retval == 0 ]]; then zip ; fi
+	# fi
 }
 
 # 4) Sign APK
@@ -113,11 +117,11 @@ si () {
 		projectsFILE="../place-apk-here-for-modding/$fileName-signed.apk"
 		if [ -e "$INFILE" ] ; then
 			#echo "java -jar signapk.jar -w "$keyfile".x509.pem "$keyfile".pk8 $INFILE $projectsFILE"
-			java -jar signapk.jar -w "$keyfile".x509.pem "$keyfile".pk8 "$INFILE" "$projectsFILE"
-			echo "==> Sign apk done(pem). with sign:"$keyfile
-			# echo 'jarsigner -keystore' "$keytoolKey" '-storepass' "$keystorePwd" "-keypass" "$keystoreAliasPwd" '-signedjar' "$projectsFILE" "$INFILE" "$keystoreAlias"
-			#jarsigner -keystore "$keytoolKey" -storepass "$keystorePwd" -keypass "$keystoreAliasPwd" -signedjar "$projectsFILE" "$INFILE" "$keystoreAlias"
-			#echo "==> Sign apk done(jarsigner). with sign:"$keytoolKey
+			#java -jar signapk.jar -w "$keyfile".x509.pem "$keyfile".pk8 "$INFILE" "$projectsFILE"
+			#echo "==> Sign apk done(pem). with sign:"$keyfile
+			 echo 'jarsigner -keystore' "$keytoolKey" '-storepass' "$keystorePwd" "-keypass" "$keystoreAliasPwd" '-signedjar' "$projectsFILE" "$INFILE" "$keystoreAlias"
+			jarsigner -keystore "$keytoolKey" -storepass "$keystorePwd" -keypass "$keystoreAliasPwd" -signedjar "$projectsFILE" "$INFILE" "$keystoreAlias"
+			echo "==> Sign apk done(jarsigner). with sign:"$keytoolKey
 			if [ "x$?" = "x0" ] ; then
 				rm -f "$INFILE"
 			fi
@@ -160,6 +164,7 @@ ins () {
 	#	read INPUT
 	#if [[ x$INPUT ==  "xY" || x$INPUT ==  "xy" || x$INPUT ==  "x" ]] ; then
 			adb install -r "place-apk-here-for-modding/$fileName-signed.apk"
+			#adb push "place-apk-here-for-modding/$fileName-signed.apk" "/sdcard/Download"
 	#	fi
 	else
 		echo "Error. No device connected."
@@ -209,7 +214,7 @@ de () {
 		rm -f "../place-apk-here-for-modding/$fileName-signed.apk"
 		rm -f "../place-apk-here-for-modding/$fileName-unsigned.apk"
 		rm -rf "../projects/$fileName.apk"
-		java -jar apktool.jar d ../place-apk-here-for-modding/$fileName.apk -o "../projects/$fileName.apk"
+		java -jar apktool.jar d ../place-apk-here-for-modding/$fileName.apk -o "../projects/$fileName.apk" # --only-main-classes
 		cd ..
 	else
 		echo
@@ -286,41 +291,44 @@ all () {
 # 12)
 bopt () {
 	cd other
-	mkdir -p "../place-apk-here-to-batch-optimize/original"
-	find "../place-apk-here-to-batch-optimize" -name *.apk | while read APK_FILE ;
-	do
-		echo "Optimizing $APK_FILE"
-		# Extract
-		7za x -o"../place-apk-here-to-batch-optimize/original" "../place-apk-here-to-batch-optimize/$APK_FILE"
-		# PNG
-		find "../place-apk-here-to-batch-optimize/original" -name *.png | while read PNG_FILE ;
-		do
-			if [ `echo "$PNG_FILE" | grep -c "\.9\.png$"` -eq 0 ] ; then
-				optipng -o99 "$PNG_FILE"
-			fi
-		done
-		# TODO optimize .ogg files
-		# Re-compress
-		7za a -tzip "../place-apk-here-to-batch-optimize/temp.zip" ../place-apk-here-to-batch-optimize/original/* -mx"$clvl"
-		FILE=`basename "$APK_FILE"`
-		DIR=`dirname "$APK_FILE"`
-		mv -f "../place-apk-here-to-batch-optimize/temp.zip" "$DIR/optimized-$FILE"
-		rm -rf ../place-apk-here-to-batch-optimize/original/*
-	done
-	rm -rf "../place-apk-here-to-batch-optimize/original"
+
+	# mkdir -p "../place-apk-here-to-batch-optimize/original"
+	# find "../place-apk-here-to-batch-optimize" -name *.apk | while read APK_FILE ;
+	# do
+	# 	echo "Optimizing $APK_FILE"
+	# 	# Extract
+	# 	7za x -o"../place-apk-here-to-batch-optimize/original" "../place-apk-here-to-batch-optimize/$APK_FILE"
+	# 	# PNG
+	# 	find "../place-apk-here-to-batch-optimize/original" -name *.png | while read PNG_FILE ;
+	# 	do
+	# 		if [ `echo "$PNG_FILE" | grep -c "\.9\.png$"` -eq 0 ] ; then
+	# 			optipng -o99 "$PNG_FILE"
+	# 		fi
+	# 	done
+	# 	# TODO optimize .ogg files
+	# 	# Re-compress
+	# 	7za a -tzip "../place-apk-here-to-batch-optimize/temp.zip" ../place-apk-here-to-batch-optimize/original/* -mx"$clvl"
+	# 	FILE=`basename "$APK_FILE"`
+	# 	DIR=`dirname "$APK_FILE"`
+	# 	mv -f "../place-apk-here-to-batch-optimize/temp.zip" "$DIR/optimized-$FILE"
+	# 	rm -rf ../place-apk-here-to-batch-optimize/original/*
+	# done
+	# rm -rf "../place-apk-here-to-batch-optimize/original"
 	cd ..
 }
 
 # 13)
 asi () {
 	echo
-	cd other
-	find "../place-apk-here-for-signing" -name *.apk | while read PLACE-APK-HERE-FOR-SIGNING ;
-	do
-		java -jar signapk.jar -w "$keyfile".x509.pem "$keyfile".pk8 $PLACE-APK-HERE-FOR-SIGNING ${PLACE-APK-HERE-FOR-SIGNING%.*}-signed.apk
-		echo "${PLACE-APK-HERE-FOR-SIGNING%.*}-signed.apk - Done. with sign:"$keyfile
-	done
-	cd ..
+
+
+	# cd other
+	# find "../place-apk-here-for-signing" -name *.apk | while read PLACE-APK-HERE-FOR-SIGNING ;
+	# do
+	# 	java -jar signapk.jar -w "$keyfile".x509.pem "$keyfile".pk8 $PLACE-APK-HERE-FOR-SIGNING ${PLACE-APK-HERE-FOR-SIGNING%.*}-signed.apk
+	# 	echo "${PLACE-APK-HERE-FOR-SIGNING%.*}-signed.apk - Done. with sign:"$keyfile
+	# done
+	# cd ..
 }
 
 # 14)
@@ -349,8 +357,10 @@ selt () {
 	echo "------------------"
 	PS3=$(echo ""; echo "Choose APK: ")
 	fileList=$(find . -type f -name "*.apk")
+
 	# Clean up list.
-	fileList=${fileList/\.\//}
+	# fileList=${fileList/\.\//}
+
 
 	if [[ -z $fileList ]] ; then
 		clear
@@ -359,6 +369,8 @@ selt () {
 	else
 		select fileName in $fileList; do
 			if [[ -n "$fileName" ]] ; then
+				fileName=${fileName/\.\//} #改为在这里清理文件名
+				echo "[$fileName]";
 				fileName=${fileName%.*}
 				if [[ $1 == "s1" ]]; then clear ; fi
 					echo ; echo "Selected: $fileName.apk" ; break
@@ -431,32 +443,32 @@ frm () {
 clr () {
 	printf "Do you want to clean your current projects (y/N)? "
 	read INPUT
-	if [[ "x$INPUT" = "xy" || "x$INPUT" = "xY" ]] ; then
-		rm -rf place-apk-here-for-signing
-		rm -rf projects
-		rm -rf place-apk-here-to-batch-optimize
-		mkdir place-apk-here-for-signing
-		mkdir place-apk-here-to-batch-optimize
-		echo "Projects cleared."
-		echo
-		printf "Clear place-apk-here-for-modding directory (y/N)? "
-		read INPUT
-		if [[ "x$INPUT" = "xy" || "x$INPUT" = "xY" ]] ; then
-			echo "Directory place-apk-here-for-modding cleared."
-			rm -rf place-apk-here-for-modding
-			mkdir place-apk-here-for-modding
-			fileName=""
-		fi
-		echo
-		printf "Delete framework-res.apk import (y/N)? "
-		read INPUT
-		if [[ "x$INPUT" = "xy" || "x$INPUT" = "xY" ]] ; then
-			echo "File framework-res.apk deleted."
-			rm -rf $HOME/apktool
-		fi
-	else
-		echo "Canceled."
-	fi
+	# if [[ "x$INPUT" = "xy" || "x$INPUT" = "xY" ]] ; then
+	# 	rm -rf place-apk-here-for-signing
+	# 	rm -rf projects
+	# 	rm -rf place-apk-here-to-batch-optimize
+	# 	mkdir place-apk-here-for-signing
+	# 	mkdir place-apk-here-to-batch-optimize
+	# 	echo "Projects cleared."
+	# 	echo
+	# 	printf "Clear place-apk-here-for-modding directory (y/N)? "
+	# 	read INPUT
+	# 	if [[ "x$INPUT" = "xy" || "x$INPUT" = "xY" ]] ; then
+	# 		echo "Directory place-apk-here-for-modding cleared."
+	# 		rm -rf place-apk-here-for-modding
+	# 		mkdir place-apk-here-for-modding
+	# 		fileName=""
+	# 	fi
+	# 	echo
+	# 	printf "Delete framework-res.apk import (y/N)? "
+	# 	read INPUT
+	# 	if [[ "x$INPUT" = "xy" || "x$INPUT" = "xY" ]] ; then
+	# 		echo "File framework-res.apk deleted."
+	# 		rm -rf $HOME/apktool
+	# 	fi
+	# else
+		echo "Force Canceled."
+	#fi
 }
 
 # 20)
@@ -729,7 +741,7 @@ restart () {
 	echo "  5    Zipalign APK                                                            "
 	echo
 	echo "- Batch Operations ------------------------------------------------------------"
-	echo "  12   Batch Optimize APK                13   Batch Sign APK                   "
+	# echo "  12   处理CPP                13   推送so文件                   "
 	echo "  14   Batch Optimize OGG files"
 	echo
 	echo "- Distribution & Update.zip Creation ------------------------------------------"
@@ -737,17 +749,17 @@ restart () {
 	echo
 	echo "- Decompile Classes.dex & View Decompiled Code --------------------------------"
 	echo "  51   Decompile Classes.dex             52   View Decompiled Code             "
-	echo
-	echo "- ADB Device & APK Management -------------------------------------------------"
-	echo "  30   Backup Device Installed APKs      31   Batch Rename APK                 "
-	echo "  32   Batch Install APK (apk-backup)"
-	echo
+	# echo
+	# echo "- ADB Device & APK Management -------------------------------------------------"
+	# echo "  30   Backup Device Installed APKs      31   Batch Rename APK                 "
+	# echo "  32   Batch Install APK (apk-backup)"
+	# echo
 	echo "-------------------------------------------------------------------------------"
 	echo "  20   Set Active APK"
-	echo "  21   Import framework-res.apk  (Perform apktool.jar if framework-res.apk)"
-	echo "  22   Clear Project Files"
+	# echo "  21   Import framework-res.apk  (Perform apktool.jar if framework-res.apk)"
+	# echo "  22   Clear Project Files"
 	echo "  23   Set Compression Level     (Current compression level: $clvl)"
-	echo "  24   Create all missing directories"
+	# echo "  24   Create all missing directories"
 	echo "  25   Show APK package information"
 	echo "  99   Fix Tools permissions"
 	echo "  00   Quit"
@@ -781,14 +793,14 @@ restart () {
 		13)      asi ;;
 		14)      ogg ;;
 		20)     selt "s1" ;; # Set via menu
-		21)      frm ;;
-		22)      clr ;;
+#		21)      frm ;;
+#		22)      clr ;;
 		23)   setclv ;;
 		24)  crtdirs ;;
 		25)  showpkg ;;
-		30)  devback ;;
-		31)   apren "../apk-rename/" ;;
-		32)   devres ;;
+		# 30)  devback ;;
+		# 31)   apren "../apk-rename/" ;;
+		# 32)   devres ;;
 		41)    mkzip ;;
 		42)  pushzip ;;
 		51)  cls2jar ;;
